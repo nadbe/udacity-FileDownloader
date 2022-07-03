@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".MainActivity"
+    tools:context=".activities.MainActivity"
     tools:showIn="@layout/activity_main">
 
     <RadioGroup
@@ -47,7 +47,7 @@
             android:textColor="@color/black" />
     </RadioGroup>
 
-    <com.udacity.LoadingButton
+    <com.udacity.views.LoadingButton
         android:id="@+id/custom_button"
         android:layout_width="0dp"
         android:layout_height="60dp"
