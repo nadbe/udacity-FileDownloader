@@ -9,14 +9,52 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main">
 
+    <RadioGroup
+        android:id="@+id/radioGroupUrls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RadioButton
+            android:id="@+id/radioButtonGlide"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_small"
+            android:buttonTint="@color/colorAccent"
+            android:text="Glide - Image loading Library by BumpTech"
+            android:textColor="@color/black"
+            tools:checked="true" />
+
+        <RadioButton
+            android:id="@+id/radioButtonUdacity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_small"
+            android:buttonTint="@color/colorAccent"
+            android:text="LoadApp - Current repository by Udacity"
+            android:textColor="@color/black" />
+
+        <RadioButton
+            android:id="@+id/radioButtonRetrofit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_small"
+            android:buttonTint="@color/colorAccent"
+            android:text="Retrofit - Type-safe HTTP client for Android and Java by Square, Inc."
+            android:textColor="@color/black" />
+    </RadioGroup>
+
     <com.udacity.LoadingButton
         android:id="@+id/custom_button"
         android:layout_width="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_height="60dp"
         android:layout_margin="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroupUrls" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
