@@ -45,7 +45,6 @@ class LoadingButton @JvmOverloads constructor(
 
             buttonValueAnimator?.addUpdateListener {
                 animatedLoadingBarValue = it.animatedValue as Float
-                Log.d("Listener", animatedLoadingBarValue.toString())
                 invalidate()
 
                 if (animatedLoadingBarValue.equals(finalWidth)) {
@@ -57,7 +56,6 @@ class LoadingButton @JvmOverloads constructor(
             var circleValueAnimator = createOfFloatAnimator(finalCircleDegrees)
             circleValueAnimator?.addUpdateListener {
                 animatedLoadingCircleValue = it.animatedValue as Float
-                Log.d("Listener", animatedLoadingCircleValue.toString())
             }
             circleValueAnimator?.start()
 
