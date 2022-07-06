@@ -9,7 +9,6 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateInterpolator
-import android.view.animation.LinearInterpolator
 import androidx.core.content.res.ResourcesCompat
 import com.udacity.R
 import kotlin.properties.Delegates
@@ -24,10 +23,12 @@ class LoadingButton @JvmOverloads constructor(
     private val backgroundColor = ResourcesCompat.getColor(resources, R.color.colorPrimary, null)
     private val loadingColor = ResourcesCompat.getColor(resources, R.color.colorPrimaryDark, null)
     private val textColor = ResourcesCompat.getColor(resources, R.color.white, null)
+    private val accentColor = ResourcesCompat.getColor(resources, R.color.colorAccent, null)
 
-    private var valueAnimator = ValueAnimator()
-    private var animatedValue: Float = 0.0f
-    private var finalWidth: Float = 0.0F
+    private var animatedLoadingBarValue: Float = 0.0f
+    private var finalWidth: Float = 0.0f
+    private var finalCircleDegrees = 360f
+    private var animatedLoadingCircleValue = 0.0f
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
@@ -36,17 +37,34 @@ class LoadingButton @JvmOverloads constructor(
         //typeface = Typeface.create( "", Typeface.BOLD)
     }
 
-
     private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, new ->
-        when (new) {
-            ButtonState.Clicked -> startValueAnimator(finalWidth)
-            ButtonState.Completed -> invalidate()
-        }
+
         if (new == ButtonState.Clicked) {
-            startValueAnimator(finalWidth)
+            var buttonValueAnimator = createOfFloatAnimator(finalWidth)
+            buttonState = ButtonState.Loading
+
+            buttonValueAnimator?.addUpdateListener {
+                animatedLoadingBarValue = it.animatedValue as Float
+                Log.d("Listener", animatedLoadingBarValue.toString())
+                invalidate()
+
+                if (animatedLoadingBarValue.equals(finalWidth)) {
+                    buttonState = ButtonState.Completed
+                }
+            }
+            buttonValueAnimator?.start()
+
+            var circleValueAnimator = createOfFloatAnimator(finalCircleDegrees)
+            circleValueAnimator?.addUpdateListener {
+                animatedLoadingCircleValue = it.animatedValue as Float
+                Log.d("Listener", animatedLoadingCircleValue.toString())
+            }
+            circleValueAnimator?.start()
+
+        } else if (new == ButtonState.Completed){
+            invalidate()
         }
     }
-
 
     init {
         isClickable = true
@@ -58,47 +76,51 @@ class LoadingButton @JvmOverloads constructor(
         return true
     }
 
-
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         var x = (widthSize / 2).toFloat()
         var y = (heightSize - (paint.descent() + paint.ascent())) / 2
 
+        // calculate size of button canvas
         var left = canvas.getClipBounds().left.toFloat()
         var top = canvas.getClipBounds().top.toFloat()
         var bottom = canvas.getClipBounds().bottom.toFloat()
         finalWidth = canvas.getClipBounds().right.toFloat()
+
+        var circleDiameter = 100f
+
+        //calculate circle position
+        var leftCirclePos = finalWidth-circleDiameter-100
+        var bottomCirclePos = (bottom/2) + (circleDiameter/2)
+        var rightCirclePos = finalWidth-100
+        var topCircelPos = (bottom/2) - (circleDiameter/2)
 
         if (buttonState.equals(ButtonState.Completed)) {
             this.setBackgroundColor(backgroundColor)
             paint.color = textColor
             canvas.drawText(context.getString(R.string.download_text), x, y, paint)
         } else if (buttonState.equals(ButtonState.Loading)){
+            //draw loading text
             paint.color = loadingColor
-            canvas.drawRect(RectF(left, top, animatedValue, bottom), paint)
+            canvas.drawRect(RectF(left, top, animatedLoadingBarValue, bottom), paint)
+            //draw loading animation
             paint.color = textColor
             canvas.drawText(context.getString(R.string.button_loading), x,y, paint)
+            //draw circle
+            paint.color = accentColor
+            canvas.drawArc(RectF(leftCirclePos,topCircelPos,rightCirclePos,bottomCirclePos),0f, animatedLoadingCircleValue,true,paint)
         }
     }
 
 
-    fun startValueAnimator(finalWidth: Float) {
+    fun createOfFloatAnimator(finalWidth: Float): ValueAnimator? {
         var startWidth = 0F
-        valueAnimator = ValueAnimator.ofFloat(startWidth, finalWidth)
+        var valueAnimator = ValueAnimator.ofFloat(startWidth, finalWidth)
         valueAnimator.duration = 5000
 
-        buttonState = ButtonState.Loading
 
-        valueAnimator.addUpdateListener {
-            animatedValue = it.animatedValue as Float
-            invalidate()
-
-            if (animatedValue.equals(finalWidth)) {
-                buttonState = ButtonState.Completed
-            }
-        }
         valueAnimator.interpolator = AccelerateInterpolator(1F)
-        valueAnimator.start()
+        return valueAnimator
 
     }
 
