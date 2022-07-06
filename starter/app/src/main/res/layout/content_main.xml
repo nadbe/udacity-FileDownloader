@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_small"
             android:buttonTint="@color/colorAccent"
-            android:text="Glide - Image loading Library by BumpTech"
+            android:text="@string/glide"
             android:textColor="@color/black"
             tools:checked="true" />
 
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_small"
             android:buttonTint="@color/colorAccent"
-            android:text="LoadApp - Current repository by Udacity"
+            android:text="@string/udacity"
             android:textColor="@color/black" />
 
         <RadioButton
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_small"
             android:buttonTint="@color/colorAccent"
-            android:text="Retrofit - Type-safe HTTP client for Android and Java by Square, Inc."
+            android:text="@string/retrofit"
             android:textColor="@color/black" />
     </RadioGroup>
 
