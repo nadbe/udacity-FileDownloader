@@ -28,8 +28,6 @@ class MainActivity : AppCompatActivity() {
     private var downloadID: Long = 0
 
     private lateinit var notificationManager: NotificationManager
-    private lateinit var pendingIntent: PendingIntent
-    private lateinit var action: NotificationCompat.Action
     private var selectedUrl:String = ""
 
 
@@ -73,7 +71,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.radioButtonUdacity -> downloadName = getString(R.string.udacity)
                 R.id.radioButtonRetrofit -> downloadName = getString(R.string.retrofit)
             }
-            context?.let { notificationManager.sendNotification(it, CHANNEL_ID, downloadName, id.toString()) }
+            context?.let { notificationManager.sendNotification(it, CHANNEL_ID, downloadName, getString(
+                            R.string.successful)) }
         }
     }
 
@@ -95,11 +94,13 @@ class MainActivity : AppCompatActivity() {
     fun NotificationManager.sendNotification(applicationContext: Context, channelName: String, downloadName:String, downloadStatus:String) {
 
         val checkStatusIntent = Intent(applicationContext, DetailActivity::class.java)
-        val checkStatusPendingIntent = PendingIntent.getActivity(applicationContext, NOTIFICATION_ID, checkStatusIntent,PendingIntent.FLAG_UPDATE_CURRENT)
         val bundle = Bundle()
         bundle.putString("downloadName", downloadName)
         bundle.putString("downloadStatus", downloadStatus)
         checkStatusIntent.putExtras(bundle)
+
+        val checkStatusPendingIntent = PendingIntent.getActivity(applicationContext, NOTIFICATION_ID, checkStatusIntent,PendingIntent.FLAG_UPDATE_CURRENT)
+
 
         val builder = NotificationCompat.Builder(applicationContext, channelName)
             .setSmallIcon(R.drawable.ic_assistant_black_24dp)
@@ -112,6 +113,7 @@ class MainActivity : AppCompatActivity() {
         notify(NOTIFICATION_ID, builder.build())
 
     }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun createChannel(channelId: String, channelName: String, description: String): NotificationChannel {
