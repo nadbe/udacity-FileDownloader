@@ -114,10 +114,10 @@ class LoadingButton @JvmOverloads constructor(
     fun createOfFloatAnimator(finalWidth: Float): ValueAnimator? {
         var startWidth = 0F
         var valueAnimator = ValueAnimator.ofFloat(startWidth, finalWidth)
-        valueAnimator.duration = 5000
+        valueAnimator.duration = 4000
 
 
-        valueAnimator.interpolator = AccelerateInterpolator(1F)
+        valueAnimator.interpolator = AccelerateInterpolator(2F)
         return valueAnimator
 
     }
