@@ -9,7 +9,9 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateInterpolator
+import androidx.core.content.ContextCompat.getColor
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.content.withStyledAttributes
 import com.udacity.R
 import kotlin.properties.Delegates
 
@@ -20,10 +22,10 @@ class LoadingButton @JvmOverloads constructor(
     private var heightSize = 40
     private lateinit var loadingBarRect: RectF
 
-    private val backgroundColor = ResourcesCompat.getColor(resources, R.color.colorPrimary, null)
-    private val loadingColor = ResourcesCompat.getColor(resources, R.color.colorPrimaryDark, null)
-    private val textColor = ResourcesCompat.getColor(resources, R.color.white, null)
-    private val accentColor = ResourcesCompat.getColor(resources, R.color.colorAccent, null)
+    private var buttonBackgroundColor = 0
+    private var accentColor = 0
+    private var textColor = 0
+    private var loadingColor = 0
 
     private var animatedLoadingBarValue: Float = 0.0f
     private var finalWidth: Float = 0.0f
@@ -34,7 +36,16 @@ class LoadingButton @JvmOverloads constructor(
         style = Paint.Style.FILL
         textAlign = Paint.Align.CENTER
         textSize = 55.0f
-        //typeface = Typeface.create( "", Typeface.BOLD)
+    }
+
+    init {
+        isClickable = true
+        context.withStyledAttributes(attrs, R.styleable.LoadingButton) {
+            buttonBackgroundColor = getColor(R.styleable.LoadingButton_loadingButtonColor, 0)
+            textColor = getColor(R.styleable.LoadingButton_loadingButtonTextColor, 0)
+            accentColor = getColor(R.styleable.LoadingButton_loadingButtonAccentColor, 0)
+            loadingColor = getColor(R.styleable.LoadingButton_loadingButtonAnimatedColor, 0)
+        }
     }
 
     private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, new ->
@@ -64,10 +75,6 @@ class LoadingButton @JvmOverloads constructor(
         }
     }
 
-    init {
-        isClickable = true
-    }
-
     override fun performClick(): Boolean {
         buttonState = ButtonState.Clicked
         if (super.performClick()) return true
@@ -94,7 +101,7 @@ class LoadingButton @JvmOverloads constructor(
         var topCircelPos = (bottom/2) - (circleDiameter/2)
 
         if (buttonState.equals(ButtonState.Completed)) {
-            this.setBackgroundColor(backgroundColor)
+            this.setBackgroundColor(buttonBackgroundColor)
             paint.color = textColor
             canvas.drawText(context.getString(R.string.download_text), x, y, paint)
         } else if (buttonState.equals(ButtonState.Loading)){
